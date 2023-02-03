@@ -1,4 +1,31 @@
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+
 export default function PomoPage() {
+  const currentState = useLocation();
+  const { state } = currentState;
+  const { todoTitle, todoDescription, todoTime } = state;
+  let [pause, setPause] = useState(true);
+  const totalTime = todoTime * 60;
+
+  const [timeLeft, setTimeLeft] = useState(totalTime);
+  useEffect(() => {
+    let interval = null;
+    if (pause === false) {
+      interval = setInterval(() => {
+        setTimeLeft((timeLeft) => timeLeft - 1);
+      }, 1000);
+    }
+    return () => clearInterval(interval);
+  }, [pause]);
+
+  const timeDivision = (timeLeft) => {
+    const min = Math.floor(timeLeft / 60);
+    const sec = timeLeft % 60;
+    const time =
+      (min < 10 ? "0" + min : min) + " : " + (sec < 10 ? "0" + sec : sec);
+    return time;
+  };
   return (
     <div>
       <div className="bg-purple-500 main-container flex flex-col justify-center h-screen max-w-[100%] container mx-auto">
@@ -7,26 +34,37 @@ export default function PomoPage() {
             {/* left side div */}
             <div className="flex flex-col justify-evenly">
               <div className="flex flex-col justify-center items-center">
-                <div className="text-8xl text-purple-500">45m : 28s</div>
+                <div className="text-8xl text-purple-500">
+                  {timeDivision(timeLeft)}
+                </div>
                 <div className="text-2xl text-purple-500">
-                  out of 60 minutes
+                  out of {todoTime} minutes
                 </div>
               </div>
               <div className="p-1"></div>
               <div className="pomo-controller">
                 <div className="flex flex-col justify-center items-center">
                   <div className="flex flex-nowrap">
-                    <button className="bg-slate-200 text-purple-600 rounded-sm h-10 w-32 mr-1">
+                    <button
+                      className="bg-slate-200 text-purple-600 rounded-sm h-10 w-32 mr-1"
+                      onClick={() => setPause(false)}
+                    >
                       Start
                     </button>
-                    <button className="bg-purple-600 text-slate-200 rounded-sm h-10 w-32 mx-1">
+                    <button
+                      className="bg-purple-600 text-slate-200 rounded-sm h-10 w-32 mx-1"
+                      onClick={() => setPause(true)}
+                    >
                       Pause
                     </button>
                   </div>
                   <div className="p-1"></div>
                   <div>
-                    <button className="bg-yellow-100 text-yellow-400 rounded-sm h-10 w-64">
-                      Pause
+                    <button
+                      className="bg-yellow-100 text-yellow-400 rounded-sm h-10 w-64"
+                      onClick={() => setTimeLeft(totalTime)}
+                    >
+                      Reset
                     </button>
                   </div>
                 </div>
@@ -35,18 +73,9 @@ export default function PomoPage() {
             {/* right side div */}
             <div className="flex flex-col">
               <div className="flex flex-col justify-center my-8">
-                    <h1 className="text-4xl">Geography Homework</h1>
-                    <div className="p-3"></div>
-                    <text className="text-2xl">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                    do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                    Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                    laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                    irure dolor in reprehenderit in voluptate velit esse cillum
-                    dolore eu fugiat nulla pariatur. Excepteur sint occaecat
-                    cupidatat non proident, sunt in culpa qui officia deserunt
-                    mollit anim id est laborum.
-                    </text>
+                <h1 className="text-4xl">{todoTitle}</h1>
+                <div className="p-3"></div>
+                <text className="text-2xl">{todoDescription}</text>
               </div>
               <div className="p-1"></div>
               <div className="tags">
