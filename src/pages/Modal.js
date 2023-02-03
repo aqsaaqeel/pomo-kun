@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate} from "react-router-dom";
 export default function Modal(props) {
-  const [input, setInput] = useState('');
+  const navigate = useNavigate();
   const [taskTitle, setTaskTitle] = useState('');
   const [description, setDescription] = useState('');
   const [timer, setTimer] = useState('');
@@ -11,7 +11,7 @@ export default function Modal(props) {
       setTaskTitle(value);
     }if(name === "description"){
       setDescription(value);
-    } else {
+    }if(name === "timer") {
       setTimer(value);
     }
   };
@@ -23,6 +23,7 @@ export default function Modal(props) {
       desc : description,
       time : timer
     });
+    navigate("/")
   }
 
   return (
@@ -69,7 +70,8 @@ export default function Modal(props) {
                   <Link to = "/"><button className="bg-slate-200 text-purple-600 rounded-sm w-20 h-10">
                   Cancel
                   </button></Link>
-                  <Link to="/"><button className="bg-purple-600 text-slate-200 rounded-sm w-20 h-10" onClick={handleSubmit}>Add</button></Link>
+                  <button className="bg-purple-600 text-slate-200 rounded-sm w-20 h-10" 
+                  onClick={handleSubmit} onSubmit={() => navigate("/")}>Add</button>
             </div>
           </div>
         </div>

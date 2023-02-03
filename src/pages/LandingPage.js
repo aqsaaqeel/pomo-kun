@@ -7,10 +7,8 @@ export default function LandingPage() {
 
   const [newTodos, setNewTodos] = useState([]);
   const addTodo = (newTodo) => {
-    // const {title, desc} = newTodo;
     const addNewTodos = [newTodo, ...newTodos];
     setNewTodos(addNewTodos);
-    // console.log(title, desc);
     console.log(...newTodos);
     setShowModal(false);
   };
